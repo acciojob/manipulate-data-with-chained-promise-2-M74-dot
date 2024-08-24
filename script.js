@@ -1,42 +1,30 @@
-//your JS code here. If required.
-// Function that returns a promise resolving with an array after 3 seconds
-function getArray() {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve([1, 2, 3, 4]);
-        }, 3000);
-    });
+// Define an async function to handle the promises
+async function manipulateData() {
+  // Return a promise that resolves with the array after 3 seconds
+  const data = await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([1, 2, 3, 4]);
+    }, 3000); // Resolve with array after 3 seconds
+  });
+
+  // Filter out odd numbers and update the output after 1 second
+  const evenNumbers = await new Promise((resolve) => {
+    setTimeout(() => {
+      const evens = data.filter((num) => num % 2 === 0);
+      document.getElementById('output').textContent = evens.join(',');
+      resolve(evens);
+    }, 1000); // Filter and update output after 1 second
+  });
+
+  // Multiply even numbers by 2 and update the output after another 2 seconds
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      const doubledEvens = evenNumbers.map((num) => num * 2);
+      document.getElementById('output').textContent = doubledEvens.join(',');
+      resolve(doubledEvens);
+    }, 2000); // Multiply and update output after 2 more seconds
+  });
 }
 
-// Function to update the output div with a given array
-function updateOutput(array) {
-    document.getElementById('output').innerText = array.join(', ');
-}
-
-// Start processing the array with chained promises
-getArray()
-    .then((array) => {
-        // Filter out odd numbers
-        const evenNumbers = array.filter(num => num % 2 === 0);
-        // Update the output div after 1 second
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                updateOutput(evenNumbers);
-                resolve(evenNumbers);
-            }, 1000);
-        });
-    })
-    .then((evenNumbers) => {
-        // Multiply even numbers by 2
-        const multipliedNumbers = evenNumbers.map(num => num * 2);
-        // Update the output div after another 2 seconds
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                updateOutput(multipliedNumbers);
-                resolve();
-            }, 2000);
-        });
-    })
-    .catch((error) => {
-        console.error('An error occurred:', error);
-    });
+// Call the function to start the process
+manipulateData();
